@@ -10,5 +10,7 @@ router.get('/welcome', authenticate, welcomePage)
 
 router.post('/videostreak', authenticate, videoStreakTrack)
 
+router.post('/vidoeWathced', authenticate,)
+
 module.exports = router;
 
