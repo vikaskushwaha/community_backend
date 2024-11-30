@@ -1,23 +1,19 @@
 
-const { user } = require("pg/lib/defaults");
+
 const db = require("../../database/db_config");
 
 
 async function videoWatchHistory(req, res) {
     const videoId = req.body.id;
     console.log(videoId);
-
     const userId = req.user.userId;
     try {
         const query = await db.one(`SELECT watched_video,total_points FROM userpoints WHERE id = $1`, [userId])
         let totalPoints = query.total_points;
-        // console.log(query.watched_video);
-
         const result = await db.none(`SELECT 1 
             FROM userpoints 
             WHERE id = $1 AND array_position(watched_video, $2) IS NOT NULL`, [userId, videoId]
         )
-
         if (!result) {
             totalPoints += 10;
             await db.none(`

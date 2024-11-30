@@ -1,9 +1,10 @@
 const { ulid } = require("ulid");
 const { urlShortener, referalLink } = require("../services/url_services");
-const { searchUser, visitedByReference } = require("../services/user_search");
+const { searchUser } = require("../services/user_search");
 const db = require('../database/db_config')
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
+const visitedByReference = require("../services/referrals/visitedByReference");
 const SECRET_KEY = 'Vikas@1998';
 
 async function login(req, res) {
@@ -33,7 +34,9 @@ async function signup(req, res) {
     try {
         const path = req.params;
         console.log(path);
-        let referralId = req.query.referral_id;
+        let referralId;
+        console.log("referralId", referralId);
+
         if (path) {
             console.log("hi");
 

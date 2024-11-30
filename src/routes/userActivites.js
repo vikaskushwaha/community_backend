@@ -13,5 +13,7 @@ router.post('/videostreak', authenticate, videoStreakTrack)
 
 router.post('/videoWatched', authenticate, videoWatchHistory)
 
+router.post('/getuserpoints', authenticate,)
+
 module.exports = router;
 
