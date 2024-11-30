@@ -2,7 +2,28 @@
 const db = require("../../database/db_config");
 const { dateIndianFormat } = require("../../services/date_format");
 
+async function streakPoints(userId, userTotalPoints) {
+    const update = `
+            UPDATE userpoints
+            SET total_points = $2
+              
+        WHERE id = $1;
+ 
+        `;
+    await db.none(update, [userId, userTotalPoints])
+}
 
+async function updateStreak(userId, streak_days, currentDate, prevDate) {
+
+    const update = `
+            UPDATE userpoints
+            SET streak_days = $2,
+                curr_date_of_video_watch = $3,
+                prev_date_of_video_watch = $4
+            WHERE id = $1;
+        `;
+    await db.none(update, [userId, streak_days, currentDate, prevDate])
+}
 
 async function videoStreakTrack(req, res) {
     try {
@@ -10,16 +31,19 @@ async function videoStreakTrack(req, res) {
         const date = req.body.date
         const userPoints = await db.one('SELECT *FROM userpoints WHERE id = $1', [userId])
         let streak_days = userPoints.streak_days;
+        let userTotalPoints = userPoints.total_points;
         let currentDate = dateIndianFormat(date)
+        if (streak_days == 7) {
+            userTotalPoints += 50;
+            await streakPoints(userId, userTotalPoints)
+        }
+        if (streakPoints == 30) {
+            userTotalPoints += 100;
+            await streakPoints(userId, userTotalPoints)
+        }
         if (userPoints.prev_date_of_video_watch === null && userPoints.curr_date_of_video_watch === null) {
             streak_days = 1;
-            const update = `
-            UPDATE userpoints
-            SET streak_days = $2,
-                curr_date_of_video_watch = $3
-            WHERE id = $1;
-        `;
-            await db.none(update, [userId, 1, currentDate])
+            await updateStreak(userId, streak_days, currentDate, null)
         }
         else {
             let prevDate = dateIndianFormat(userPoints.curr_date_of_video_watch)
@@ -30,25 +54,11 @@ async function videoStreakTrack(req, res) {
             console.log("dayDiff", diffDays);
             if (diffDays == 1) {
                 streak_days += 1;
-                const update = `
-            UPDATE userpoints
-            SET streak_days = $2,
-                curr_date_of_video_watch = $3,
-                prev_date_of_video_watch = $4
-            WHERE id = $1;
-        `;
-                await db.none(update, [userId, streak_days, currentDate, prevDate])
+                await updateStreak(userId, streak_days, currentDate, prevDate)
             }
             else if (diffDays > 1) {
                 streak_days = 1;
-                const update = `
-            UPDATE userpoints
-            SET streak_days = $2,
-                curr_date_of_video_watch = $3,
-                prev_date_of_video_watch = $4
-            WHERE id = $1;
-        `;
-                await db.none(update, [userId, streak_days, currentDate, prevDate])
+                await updateStreak(userId, streak_days, currentDate, prevDate)
             }
 
         }

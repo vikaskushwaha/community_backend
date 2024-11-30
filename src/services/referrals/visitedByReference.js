@@ -5,7 +5,6 @@ const getTotalPoints = require("./totalPoints");
 const updateReferralPoints = require("./updateReferralPoints");
 const updateReferredCount = require("./updateReferredCount");
 
-
 async function visitedByReference(referralId) {
 
     const date = new Date().toISOString().slice(0, 10);
@@ -15,7 +14,6 @@ async function visitedByReference(referralId) {
     let totalPoints = await getTotalPoints(referralId);
     const referralPoints = claculateReferralPoints(referralCount, totalPoints);
     await updateReferralPoints(referralId, referralPoints)
-
 
 }
 
