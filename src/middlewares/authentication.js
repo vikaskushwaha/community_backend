@@ -4,6 +4,7 @@ const SECRET_KEY = 'Vikas@1998';
 
 
 function authenticate(req, res, next) {
+
     const token = req.headers.authorization.split(' ')[1];
     if (!token) {
         res.status(200)

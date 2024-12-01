@@ -8,7 +8,8 @@ async function welcomePage(req, res) {
     console.log(userData);
     const message = {
         // totalPoints: `total points ${userPoints.referral_points}`,
-        ShotnedLink: `referral link ${userData.shortenedurl}`
+        WatchedVideos: `${userData.watched_videos}`,
+        ShortenedLink: `referral link ${userData.shortenedurl}`
     }
     res.status(200).json({
         success: true,

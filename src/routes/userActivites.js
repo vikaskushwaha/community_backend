@@ -4,6 +4,7 @@ const { authenticate } = require("../middlewares/authentication");
 const { welcomePage } = require("../controllers/userActivites/welcome");
 const videoStreakTrack = require("../controllers/userActivites/videoStreak");
 const videoWatchHistory = require("../controllers/userActivites/totalVideoWatched");
+const getUsersPoints = require("../controllers/userActivites/totalUsersPoints");
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.post('/videostreak', authenticate, videoStreakTrack)
 
 router.post('/videoWatched', authenticate, videoWatchHistory)
 
-router.post('/getuserpoints', authenticate,)
+router.get('/getuserpoints', authenticate, getUsersPoints)
 
 module.exports = router;
 
