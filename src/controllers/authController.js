@@ -40,8 +40,7 @@ async function signup(req, res) {
 
         if (path) {
             console.log("hi");
-
-            let searchedUrl = "http://localhost:2000/auth" + req.url;
+            let searchedUrl = process.env.SEARCHED_URL + req.url;
             const result = await searchUser(searchedUrl)
             console.log(result);
 
