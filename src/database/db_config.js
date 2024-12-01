@@ -1,6 +1,8 @@
 
 const pgp = require('pg-promise')();
-const db = pgp('postgres://postgres:123@localhost:5432/CommunityBackend');
+
+const db = pgp(process.env.DATABASE_URL);
+
 
 db.connect()
     .then((connection) => {

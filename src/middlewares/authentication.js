@@ -1,6 +1,6 @@
 const { func } = require("../database/db_config");
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = 'Vikas@1998';
+const SECRET_KEY = process.env.JWT_SECRET;
 
 
 function authenticate(req, res, next) {

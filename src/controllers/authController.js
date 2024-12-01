@@ -5,7 +5,7 @@ const db = require('../database/db_config')
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const visitedByReference = require("../services/referrals/visitedByReference");
-const SECRET_KEY = 'Vikas@1998';
+const SECRET_KEY = process.env.JWT_SECRET;
 
 async function login(req, res) {
     try {
@@ -54,7 +54,7 @@ async function signup(req, res) {
         const newId = ulid();
         const refLink = referalLink(newId)
         const { name, email, phone } = req.body
-        const shortenedURL = urlShortener;
+        const shortenedURL = urlShortener();
         const insert = 'INSERT INTO users(id,name,email,phone,referralurl, shortenedurl) VALUES($1,$2,$3,$4,$5,$6)'
         await db.none(insert, [newId, name, email, phone, refLink, shortenedURL])
         const token = jwt.sign({ ulid: newId, email: email }, SECRET_KEY);

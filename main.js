@@ -1,3 +1,4 @@
+require('dotenv').config();
 require('./src/database/db_config')
 const express = require('express')
 const { createRegisteredUserTable, insertUserDetails, insertNewColumn, visitedByReference } = require('./src/database/schemas/registerd_user');
@@ -9,6 +10,7 @@ const userActivites = require('./src/routes/userActivites')
 
 const app = express()
 app.use(express.json());
+
 
 app.use('/auth', authrouter)
 
@@ -28,7 +30,7 @@ app.get('/createTable', createRegisteredUserTable)
 // app.post('/loggedIn', createUsersPointsTable)
 
 // app.get('/accessResource', authenticate, videoContent)
-app.listen(2000, () => {
+app.listen(process.env.PORT, () => {
     console.log("......serverStarted.........");
 
 })
