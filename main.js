@@ -20,9 +20,8 @@ app.use('/api', userActivites)
 app.get('/', (req, res) => {
     res.send("this have been setup")
 })
-
-app.get('/createTable', createRegisteredUserTable)
-
+app.post('/createTable', createRegisteredUserTable)
+app.post('/createUsersActivityTable', createUsersPointsTable)
 // app.post('/insertdata/:shortenedPath?', checkUserExists, insertUserDetails)
 
 // app.post('/insertColumn', insertNewColumn)

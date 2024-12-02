@@ -10,7 +10,8 @@ async function createUsersPointsTable(req, res) {
             prev_date_of_video_watch  DATE,
             curr_date_of_video_watch  DATE,
             streak_days INT,
-            total_points INT 
+            total_points INT,
+            watched_video text[]
         
     ) `)
     try {
