@@ -10,17 +10,19 @@ async function checkUserExists(req, res, next) {
     }
     try {
         const query = `
-            SELECT EXISTS (
-                SELECT 1 
-                FROM  users
-                WHERE email = $1
-            ) AS exists;
+            SELECT * 
+            FROM users
+            WHERE email = $1;
         `;
         const user = await db.oneOrNone(query, [userEmail]);
-        if (!user.exists) {
+        console.log("userForm chekuserExists", user);
+
+        if (!user) {
             return res.status(404).json({ error: 'Email does not exist. Please register' });
         }
         req.user = user;
+        console.log(req.user);
+
         next();
     }
     catch (error) {

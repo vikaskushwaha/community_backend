@@ -4,24 +4,31 @@ const SECRET_KEY = process.env.JWT_SECRET;
 
 
 function authenticate(req, res, next) {
+    const cookieHeader = req.headers.cookie;
+    console.log("cookieHeader : ", cookieHeader);
 
-    const token = req.headers.authorization.split(' ')[1];
-    if (!token) {
-        res.status(200)
+    if (!cookieHeader) {
+        res.status(400)
             .json(
                 {
                     success: false,
-                    message: "Error!Token was not provided."
+                    message: "cookie not found"
                 }
             );
     }
+    const token = req.headers.cookie.substr(11);
+    console.log("token from authentication", token);
+
     const decodedToken = jwt.verify(token, SECRET_KEY);
     req.user = {
         userId: decodedToken.ulid,
         email: decodedToken.email
     }
-    // console.log(req.user);
     next()
+
+
+    // console.log(req.user);
+
 
 }
 

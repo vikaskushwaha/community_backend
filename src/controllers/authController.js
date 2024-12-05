@@ -2,17 +2,33 @@ const { ulid } = require("ulid");
 const { urlShortener, referalLink } = require("../services/url_services");
 const { searchUser } = require("../services/user_search");
 const db = require('../database/db_config')
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const visitedByReference = require("../services/referrals/visitedByReference");
+const tokenGenerator = require("../../utils/jwtTokenGenerator");
+const setAuthTokenCookie = require("../../utils/cookieHelpher");
 const SECRET_KEY = process.env.JWT_SECRET;
-
 async function login(req, res) {
     try {
         const userEmail = req.body;
+        console.log("userEmail", userEmail);
+
         const user = req.user;
+        console.log("user from login", user);
+
         const newId = user.id;
-        const token = jwt.sign({ ulid: newId, email: userEmail }, SECRET_KEY);
+
+        // const token = jwt.sign({ ulid: newId, email: userEmail }, SECRET_KEY, { expiresIn: '1h' });
+        // res.cookie('auth_token', token, {
+        //     httpOnly: true,
+        //     secure: false,
+        //     sameSite: 'Strict',
+        //     maxAge: 3600000,
+        // });
+        const token = tokenGenerator({ ulid: newId, userEmail });
+        setAuthTokenCookie(res, token)
+
+
         return res.status(200).json({
             status: "success",
             message: "Login successful",
@@ -28,7 +44,6 @@ async function login(req, res) {
     }
 
 }
-
 
 
 async function signup(req, res) {
@@ -56,7 +71,8 @@ async function signup(req, res) {
         const shortenedURL = urlShortener();
         const insert = 'INSERT INTO users(id,name,email,phone,referralurl, shortenedurl) VALUES($1,$2,$3,$4,$5,$6)'
         await db.none(insert, [newId, name, email, phone, refLink, shortenedURL])
-        const token = jwt.sign({ ulid: newId, email: email }, SECRET_KEY);
+        const token = tokenGenerator({ ulid: newId, email });
+        setAuthTokenCookie(res, token)
 
         const insertFirstLoginPoints = 'INSERT INTO  userpoints(id,email,total_points) VALUES($1,$2,$3)'
         await db.none(insertFirstLoginPoints, [newId, email, 50])
