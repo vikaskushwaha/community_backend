@@ -2,12 +2,14 @@ const { ulid } = require("ulid");
 const { urlShortener, referalLink } = require("../services/url_services");
 const { searchUser } = require("../services/user_search");
 const db = require('../database/db_config')
-// const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const visitedByReference = require("../services/referrals/visitedByReference");
 const tokenGenerator = require("../../utils/jwtTokenGenerator");
 const setAuthTokenCookie = require("../../utils/cookieHelpher");
 const SECRET_KEY = process.env.JWT_SECRET;
+
+
+
 async function login(req, res) {
     try {
         const userEmail = req.body;
@@ -18,13 +20,6 @@ async function login(req, res) {
 
         const newId = user.id;
 
-        // const token = jwt.sign({ ulid: newId, email: userEmail }, SECRET_KEY, { expiresIn: '1h' });
-        // res.cookie('auth_token', token, {
-        //     httpOnly: true,
-        //     secure: false,
-        //     sameSite: 'Strict',
-        //     maxAge: 3600000,
-        // });
         const token = tokenGenerator({ ulid: newId, userEmail });
         setAuthTokenCookie(res, token)
 
@@ -49,12 +44,11 @@ async function login(req, res) {
 async function signup(req, res) {
     try {
         const path = req.params;
-        console.log(path);
         let referralId;
-        console.log("referralId", referralId);
+
 
         if (path) {
-            console.log("hi");
+
             let searchedUrl = process.env.SEARCHED_URL + req.url;
             const result = await searchUser(searchedUrl)
             console.log(result);

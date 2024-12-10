@@ -1,14 +1,14 @@
-
-
 const db = require("../../database/db_config");
 
 
 async function videoWatchHistory(req, res) {
-    const videoId = req.body.id;
-    console.log(videoId);
+
+
+    const videoId = req.body.videoId;
+    // console.log(videoId);
     const userId = req.user.userId;
     try {
-        const query = await db.one(`SELECT watched_video,total_points FROM userpoints WHERE id = $1`, [userId])
+        const query = await db.oneOrNone(`SELECT watched_video,total_points FROM userpoints WHERE id = $1`, [userId])
         let totalPoints = query.total_points;
         const result = await db.none(`SELECT 1 
             FROM userpoints 
@@ -17,7 +17,7 @@ async function videoWatchHistory(req, res) {
         if (!result) {
             totalPoints += 10;
             await db.none(`
-            UPDATE userpoints 
+            UPDATE userpoints      
             SET watched_video = array_append(watched_video, $2),
                 total_points = $3
             WHERE id = $1;

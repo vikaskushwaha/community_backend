@@ -10,7 +10,7 @@ async function getUsersPoints(req, res) {
             .json(
                 {
                     success: true,
-                    message: `totalpoints ${totalPointsOfUser}`
+                    TotalPoints: totalPointsOfUser
                 }
             );
 

@@ -9,8 +9,8 @@ const authrouter = require('./src/routes/authroute');
 const userActivites = require('./src/routes/userActivites')
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-
-const cors = require('cors')
+const cors = require('cors');
+const db = require('./src/database/db_config');
 const app = express()
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -25,10 +25,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-
 app.use('/auth', authrouter)
 
 app.use('/api', userActivites)
+
+
 
 // app.use('/user-activites', user)
 app.get('/', (req, res) => {
