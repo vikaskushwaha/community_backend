@@ -18,6 +18,8 @@ async function checkUserExists(req, res, next) {
         console.log("userForm chekuserExists", user);
 
         if (!user) {
+            console.log("hi from null");
+
             return res.status(404).json({ error: 'Email does not exist. Please register' });
         }
         req.user = user;

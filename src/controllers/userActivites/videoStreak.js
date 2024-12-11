@@ -28,31 +28,33 @@ async function updateStreak(userId, streak_days, currentDate, prevDate) {
 async function videoStreakTrack(req, res) {
     try {
         const userId = req.user.userId;
-        const date = req.body.date
-        const userPoints = await db.one('SELECT *FROM userpoints WHERE id = $1', [userId])
-        let streak_days = userPoints.streak_days;
-        let userTotalPoints = userPoints.total_points;
+        const date = new Date();
         let currentDate = dateIndianFormat(date)
-        if (streak_days == 7) {
+        const userPoints = await db.one('SELECT *FROM userpoints WHERE id = $1', [userId])
+        let { streak_days, userTotalPoints, prev_date_of_video_watch, curr_date_of_video_watch } = userPoints;
+        // let streak_days = userPoints.streak_days;
+        // let userTotalPoints = userPoints.total_points;
+
+        if (streak_days === 7) {
             userTotalPoints += 50;
             await streakPoints(userId, userTotalPoints)
         }
-        if (streakPoints == 30) {
+        if (streakPoints === 30) {
             userTotalPoints += 100;
             await streakPoints(userId, userTotalPoints)
         }
-        if (userPoints.prev_date_of_video_watch === null && userPoints.curr_date_of_video_watch === null) {
+        if (prev_date_of_video_watch === null && curr_date_of_video_watch === null) {
             streak_days = 1;
             await updateStreak(userId, streak_days, currentDate, null)
         }
         else {
-            let prevDate = dateIndianFormat(userPoints.curr_date_of_video_watch)
+            let prevDate = dateIndianFormat(curr_date_of_video_watch)
             prevDate = new Date(prevDate)
             currentDate = new Date(currentDate)
             const diffTime = Math.abs(currentDate - prevDate);
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             console.log("dayDiff", diffDays);
-            if (diffDays == 1) {
+            if (diffDays === 1) {
                 streak_days += 1;
                 await updateStreak(userId, streak_days, currentDate, prevDate)
             }

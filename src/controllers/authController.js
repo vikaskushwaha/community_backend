@@ -12,11 +12,12 @@ const SECRET_KEY = process.env.JWT_SECRET;
 
 async function login(req, res) {
     try {
+
+
         const userEmail = req.body;
-        console.log("userEmail", userEmail);
+
 
         const user = req.user;
-        console.log("user from login", user);
 
         const newId = user.id;
 
@@ -79,9 +80,16 @@ async function signup(req, res) {
             message: `${newId} ${token} "userloggedin`
         })
     } catch (error) {
-        console.log(error);
+        console.log("error form signup", error);
+        if (error.constraint === "users_email_key") {
+            error.constraint = "This email already registered"
+        }
+        else {
+            error.constraint = "This Phone no is already registered"
+        }
         res.status(500)
         res.json({
+            error: error.constraint,
             status: "failed",
             message: "internal"
         })
