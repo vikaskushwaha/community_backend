@@ -18,7 +18,6 @@ async function login(req, res) {
 
 
         const user = req.user;
-
         const newId = user.id;
 
         const token = tokenGenerator({ ulid: newId, userEmail });
@@ -29,6 +28,7 @@ async function login(req, res) {
             status: "success",
             message: "Login successful",
             token,
+            newId
         });
     }
     catch (error) {
@@ -77,7 +77,8 @@ async function signup(req, res) {
         res.status(200);
         res.json({
             status: "success",
-            message: `${newId} ${token} "userloggedin`
+            token,
+            newId
         })
     } catch (error) {
         console.log("error form signup", error);
@@ -96,7 +97,20 @@ async function signup(req, res) {
     }
 }
 
+function logOut(req, res) {
+
+
+    res.clearCookie('auth_token', {
+        httpOnly: true, // Prevent client-side JavaScript access
+        secure: true,   // Set true in production for HTTPS
+        sameSite: 'strict', // Mitigate CSRF attacks
+    });
+    return res.status(200).send('Logged out successfully');
+
+}
+
 module.exports = {
     login,
-    signup
+    signup,
+    logOut
 }

@@ -1,4 +1,5 @@
 
+const { user } = require("pg/lib/defaults");
 const db = require("../../database/db_config");
 async function welcomePage(req, res) {
 
@@ -8,9 +9,11 @@ async function welcomePage(req, res) {
     const userPoints = await db.one('SELECT *FROM userpoints WHERE id = $1', [userId])
 
 
+
     const usersInfo = {
         ListOfWatchedVideos: userPoints.watched_video,
-        ShortenedLink: userData.shortenedurl
+        ShortenedLink: userData.shortenedurl,
+        eulid: userData.id
     }
     res.status(200).json({
         success: true,
