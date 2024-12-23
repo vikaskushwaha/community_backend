@@ -18,7 +18,7 @@ function authenticate(req, res, next) {
                 }
             );
     }
-    const token = req.headers.cookie.substr(11);
+    const token = cookieHeader.split("=")[1];
 
     const decodedToken = jwt.verify(token, SECRET_KEY);
 
