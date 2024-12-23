@@ -10,7 +10,7 @@ function authenticate(req, res, next) {
     // console.log("cookieHeader : ", cookieHeader);
 
     if (!cookieHeader) {
-        return res.status(400)
+        return res.status(401)
             .json(
                 {
                     success: false,

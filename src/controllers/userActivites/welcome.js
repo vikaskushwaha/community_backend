@@ -16,15 +16,6 @@ async function welcomePage(req, res) {
     else {
         totalpercent = Math.floor((userPoints.watched_video.length * 100) / 112);
     }
-    // let totalpercent;
-    // if (userPoints.watched_video != null) {
-    //     if ((userPoints.watched_video).length > 0) {
-    //         totalpercent = Math.floor((userPoints.watched_video.length * 100) / 112);
-    //     }
-    // }
-    // else {
-    //     totalpercent = 0;
-    // }
 
 
     const usersInfo = {
