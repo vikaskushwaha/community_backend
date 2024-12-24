@@ -5,7 +5,7 @@ function setAuthTokenCookie(res, token) {
         httpOnly: true,
         secure: false, // Set to true in production
         sameSite: 'Strict',
-        maxAge: 15000,
+        maxAge: 1800000,
     });
 }
 

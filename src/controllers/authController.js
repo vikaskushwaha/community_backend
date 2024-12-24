@@ -4,8 +4,8 @@ const { searchUser } = require("../services/user_search");
 const db = require('../database/db_config')
 const bodyParser = require('body-parser');
 const visitedByReference = require("../services/referrals/visitedByReference");
-const tokenGenerator = require("../../utils/jwtTokenGenerator");
-const setAuthTokenCookie = require("../../utils/cookieHelpher");
+const tokenGenerator = require("../utils/jwtTokenGenerator");
+const setAuthTokenCookie = require("../utils/cookieHelpher");
 const SECRET_KEY = process.env.JWT_SECRET;
 
 
