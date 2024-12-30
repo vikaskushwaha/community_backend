@@ -1,3 +1,4 @@
+const { findUser } = require('../api/v1/community/dal/authDal');
 const db = require('../database/db_config')
 
 async function checkUserExists(req, res, next) {
@@ -9,22 +10,11 @@ async function checkUserExists(req, res, next) {
         });
     }
     try {
-        const query = `
-            SELECT * 
-            FROM users
-            WHERE email = $1;
-        `;
-        const user = await db.oneOrNone(query, [userEmail]);
-        console.log("userForm chekuserExists", user);
-
+        const user = await findUser(userEmail);
         if (!user) {
-            console.log("hi from null");
-
             return res.status(404).json({ error: 'Email does not exist. Please register' });
         }
         req.user = user;
-        console.log(req.user);
-
         next();
     }
     catch (error) {

@@ -1,29 +1,25 @@
-const { ulid } = require("ulid");
-const { urlShortener, referalLink } = require("../services/url_services");
-const { searchUser } = require("../services/user_search");
-const db = require('../database/db_config')
+
+const { urlShortener, referalLink } = require("../../../../utils/url_services");
 const bodyParser = require('body-parser');
 const visitedByReference = require("../services/referrals/visitedByReference");
-const tokenGenerator = require("../utils/jwtTokenGenerator");
-const setAuthTokenCookie = require("../utils/cookieHelpher");
+const tokenGenerator = require("../../../../utils/jwtTokenGenerator");
+const setAuthTokenCookie = require("../../../../utils/cookieHelpher");
+const db = require("../../../../database/db_config");
+const { loginServices, signupServices, singUpPoints } = require("../services/authServices");
+const { validationResult } = require('express-validator');
+const { singupRefferalUrlSearch } = require("../dal/authDal");
+
 const SECRET_KEY = process.env.JWT_SECRET;
 
 
 
 async function login(req, res) {
     try {
-
-
         const userEmail = req.body;
-
-
         const user = req.user;
         const newId = user.id;
-
-        const token = tokenGenerator({ ulid: newId, userEmail });
-        setAuthTokenCookie(res, token)
-
-
+        const token = await loginServices(userEmail, newId)
+        setAuthTokenCookie(res, token);
         return res.status(200).json({
             status: "success",
             message: "Login successful",
@@ -32,45 +28,40 @@ async function login(req, res) {
         });
     }
     catch (error) {
-        res.sendStatus(500)
-        res.json({
+        return res.status(401).json({
             status: 'failed',
-            message: "Internal server error"
-        })
+            message: "Invalid credentials"
+        });
     }
 
 }
 
 
 async function signup(req, res) {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            status: 'failed',
+            errors: errors.array()
+        });
+    }
     try {
         const path = req.params;
         let referralId;
-
-
         if (path) {
-
             let searchedUrl = process.env.SEARCHED_URL + req.url;
-            const result = await searchUser(searchedUrl)
-            console.log(result);
-
+            const result = await singupRefferalUrlSearch(searchedUrl)
             if (result) {
                 const parsedUrl = new URL(result.referralurl);
                 const params = new URLSearchParams(parsedUrl.search);
                 referralId = params.get('referral_id');
             }
         }
-        const newId = ulid();
-        const refLink = referalLink(newId)
         const { name, email, phone } = req.body
-        const shortenedURL = urlShortener();
-        const insert = 'INSERT INTO users(id,name,email,phone,referralurl, shortenedurl) VALUES($1,$2,$3,$4,$5,$6)'
-        await db.none(insert, [newId, name, email, phone, refLink, shortenedURL])
-        const token = tokenGenerator({ ulid: newId, email });
+        const { token, newId } = await signupServices(name, email, phone)
         setAuthTokenCookie(res, token)
-
-        const insertFirstLoginPoints = 'INSERT INTO  userpoints(id,email,total_points) VALUES($1,$2,$3)'
-        await db.none(insertFirstLoginPoints, [newId, email, 50])
+        await singUpPoints(newId, email)
         if (referralId) {
             visitedByReference(referralId)
         }
@@ -85,7 +76,7 @@ async function signup(req, res) {
         if (error.constraint === "users_email_key") {
             error.constraint = "This email already registered"
         }
-        else {
+        if (error.constraint === "users_phone_no") {
             error.constraint = "This Phone no is already registered"
         }
         res.status(500)

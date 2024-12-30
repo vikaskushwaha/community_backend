@@ -1,4 +1,8 @@
-const db = require("../../database/db_config");
+const db = require("../../../../database/db_config");
+
+
+
+
 
 async function FetchDsaPlaylist(req, res) {
     try {

@@ -1,11 +1,10 @@
-const db = require("../../database/db_config");
+
+const { totalUserPointsServices } = require("../services/totalUserPointsServices");
 
 async function getUsersPoints(req, res) {
     try {
-        const UserId = req.user.userId;
-        const result = await db.one(`SELECT  total_points FROM userpoints WHERE id= $1`, [UserId])
-        const totalPointsOfUser = result.total_points
-        console.log("userid", UserId);
+        const userId = req.user.userId;
+        const totalPointsOfUser = await totalUserPointsServices(userId)
         res.status(200)
             .json(
                 {

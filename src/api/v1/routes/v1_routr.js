@@ -1,8 +1,8 @@
 const express = require('express')
 
-const authrouter = require('../userbase/routes/authroute')
-const userActivites = require('../userbase/routes/userActivites')
-const dbRoutes = require('../userbase/routes/databaseroutes')
+const authrouter = require('../community/routes/authroute')
+const userActivites = require('../community/routes/userActivites')
+const dbRoutes = require('../community/routes/databaseroutes')
 const v1Router = express.Router();
 
 v1Router.use('/auth', authrouter);

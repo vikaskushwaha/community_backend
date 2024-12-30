@@ -1,4 +1,4 @@
-const { logOut } = require("../controllers/authController");
+const { logOut } = require("../api/v1/community/controllers/authController");
 const { func } = require("../database/db_config");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.JWT_SECRET;

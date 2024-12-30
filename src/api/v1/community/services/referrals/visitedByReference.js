@@ -1,4 +1,5 @@
-const db = require("../../database/db_config");
+
+const db = require("../../../../../database/db_config");
 const claculateReferralPoints = require("./calculateReferralPoints");
 const getReferralCount = require("./getReferralCount");
 const getTotalPoints = require("./totalPoints");

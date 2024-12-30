@@ -1,4 +1,5 @@
-const db = require("../../database/db_config");
+const db = require("../../../../../database/db_config");
+
 
 async function getReferralCount(referralId, date) {
     let total_referal;

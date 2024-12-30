@@ -1,11 +1,12 @@
 const express = require("express");
 const { route } = require("./authroute");
 const { authenticate } = require("../../../../middlewares/authentication");
-const { welcomePage } = require("../../../../controllers/userActivites/welcome");
-const videoStreakTrack = require("../../../../controllers/userActivites/videoStreak");
-const videoWatchHistory = require("../../../../controllers/userActivites/totalVideoWatched");
-const getUsersPoints = require("../../../../controllers/userActivites/totalUsersPoints");
-const { FetchDsaPlaylist } = require("../../../../controllers/userActivites/fetchDsaPlayList");
+const { welcomePage } = require("../controllers/welcome");
+const videoStreakTrack = require("../controllers/videoStreak");
+const videoWatchHistory = require("../controllers/totalVideoWatched");
+const getUsersPoints = require("../controllers/totalUsersPoints");
+const { FetchDsaPlaylist } = require("../controllers/fetchDsaPlayList");
+
 
 const router = express.Router();
 
