@@ -14,6 +14,13 @@ const signupValidation = [
         .notEmpty().withMessage('Phone number is required')
 ];
 
+
+const loginValidation = [
+    body('email')
+        .isEmail().withMessage('Invalid email address')
+]
+
 module.exports = {
-    signupValidation
+    signupValidation,
+    loginValidation,
 };

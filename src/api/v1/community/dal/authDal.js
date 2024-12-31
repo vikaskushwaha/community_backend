@@ -1,5 +1,6 @@
 const db = require("../../../../database/db_config");
 const { ParameterizedQuery, TableName } = require("pg-promise");
+
 const findUser = async (userEmail) => {
     try {
         const query = `
@@ -10,11 +11,10 @@ const findUser = async (userEmail) => {
         const user = await db.oneOrNone(query, [userEmail]);
 
         return user;
+    } catch (error) {
+        throw error
     }
-    catch (error) {
-        console.error('Error checking email:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+
 }
 
 const singupRefferalUrlSearch = async (searchedUrl) => {

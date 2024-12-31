@@ -1,10 +1,8 @@
 
-const { urlShortener, referalLink } = require("../../../../utils/url_services");
+
 const bodyParser = require('body-parser');
-const visitedByReference = require("../services/referrals/visitedByReference");
-const tokenGenerator = require("../../../../utils/jwtTokenGenerator");
+
 const setAuthTokenCookie = require("../../../../utils/cookieHelpher");
-const db = require("../../../../database/db_config");
 const { loginServices, signupServices, singUpPoints } = require("../services/authServices");
 const { validationResult } = require('express-validator');
 const { singupRefferalUrlSearch } = require("../dal/authDal");
@@ -15,10 +13,11 @@ const SECRET_KEY = process.env.JWT_SECRET;
 
 async function login(req, res) {
     try {
-        const userEmail = req.body;
-        const user = req.user;
-        const newId = user.id;
-        const token = await loginServices(userEmail, newId)
+        const userEmail = req.body.email;
+        console.log(userEmail);
+
+        const { token, newId } = await loginServices(userEmail)
+
         setAuthTokenCookie(res, token);
         return res.status(200).json({
             status: "success",
@@ -26,11 +25,21 @@ async function login(req, res) {
             token,
             newId
         });
+
+
     }
     catch (error) {
-        return res.status(401).json({
+
+        if (error.message == "user not found with this email") {
+            return res.status(404).json({
+                status: 'failed',
+                message: error.message
+
+            })
+        }
+        return res.status(500).json({
             status: 'failed',
-            message: "Invalid credentials"
+            message: "internal server error"
         });
     }
 
@@ -39,13 +48,7 @@ async function login(req, res) {
 
 async function signup(req, res) {
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            status: 'failed',
-            errors: errors.array()
-        });
-    }
+
     try {
         const path = req.params;
         const requestUrl = req.url
