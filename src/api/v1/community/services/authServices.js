@@ -1,7 +1,8 @@
 const tokenGenerator = require("../../../../utils/jwtTokenGenerator");
 const { urlShortener, referalLink } = require("../../../../utils/url_services");
-const { signupDatainsertion, insertSingUpPoints } = require("../dal/authDal");
+const { signupDatainsertion, insertSingUpPoints, singupRefferalUrlSearch } = require("../dal/authDal");
 const { ulid } = require("ulid");
+const visitedByReference = require("./referrals/visitedByReference");
 
 const loginServices = async (userEmail, newId) => {
 
@@ -10,14 +11,28 @@ const loginServices = async (userEmail, newId) => {
 
 }
 
-const signupServices = async (name, email, phone) => {
+const signupServices = async (requestUrl, path, name, email, phone) => {
     try {
+        let referralId;
+        if (path) {
+            let searchedUrl = process.env.SEARCHED_URL + requestUrl;
+            const result = await singupRefferalUrlSearch(searchedUrl)
+            if (result) {
+                const parsedUrl = new URL(result.referralurl);
+                const params = new URLSearchParams(parsedUrl.search);
+                referralId = params.get('referral_id');
+                if (referralId) {
+                    visitedByReference(referralId)
+                }
+            }
+        }
         const newId = ulid();
         const refLink = referalLink(newId)
         const shortenedURL = urlShortener();
         await signupDatainsertion(newId, name, email, phone, refLink, shortenedURL)
-        const token = tokenGenerator({ ulid: newId, email });
+        await singUpPoints(newId, email)
 
+        const token = tokenGenerator({ ulid: newId, email });
         return {
             token, newId
         };

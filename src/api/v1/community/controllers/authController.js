@@ -48,23 +48,10 @@ async function signup(req, res) {
     }
     try {
         const path = req.params;
-        let referralId;
-        if (path) {
-            let searchedUrl = process.env.SEARCHED_URL + req.url;
-            const result = await singupRefferalUrlSearch(searchedUrl)
-            if (result) {
-                const parsedUrl = new URL(result.referralurl);
-                const params = new URLSearchParams(parsedUrl.search);
-                referralId = params.get('referral_id');
-            }
-        }
+        const requestUrl = req.url
         const { name, email, phone } = req.body
-        const { token, newId } = await signupServices(name, email, phone)
+        const { token, newId } = await signupServices(requestUrl, path, name, email, phone)
         setAuthTokenCookie(res, token)
-        await singUpPoints(newId, email)
-        if (referralId) {
-            visitedByReference(referralId)
-        }
         res.status(200);
         res.json({
             status: "success",
