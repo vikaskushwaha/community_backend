@@ -47,6 +47,7 @@ const insertSingUpPoints = async (newId, email) => {
 
 }
 
+
 module.exports = {
     findUser,
     singupRefferalUrlSearch,

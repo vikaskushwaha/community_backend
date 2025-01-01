@@ -1,6 +1,5 @@
 const express = require("express");
 const { route } = require("./authroute");
-const { authenticate } = require("../../../../middlewares/authentication");
 const { welcomePage } = require("../controllers/welcome");
 const videoStreakTrack = require("../controllers/videoStreak");
 const videoWatchHistory = require("../controllers/totalVideoWatched");

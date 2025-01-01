@@ -1,10 +1,7 @@
 
-const db = require("../../../../../database/db_config");
-const claculateReferralPoints = require("./calculateReferralPoints");
-const getReferralCount = require("./getReferralCount");
-const getTotalPoints = require("./totalPoints");
-const updateReferralPoints = require("./updateReferralPoints");
-const updateReferredCount = require("./updateReferredCount");
+const claculateReferralPoints = require("../../../../../utils/calculateReferralPoints");
+const { updateReferralPoints, getReferralCount, getTotalPoints, updateReferredCount } = require("../../dal/referralDal");
+
 
 async function visitedByReference(referralId) {
 

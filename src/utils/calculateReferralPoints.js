@@ -1,4 +1,5 @@
-function claculateReferralPoints(total_referal, totalPointsOfReferringUser) {
+
+const claculateReferralPoints = (total_referal, totalPointsOfReferringUser) => {
 
     if (total_referal % 5 != 0) {
         totalPointsOfReferringUser += 50;
@@ -14,5 +15,4 @@ function claculateReferralPoints(total_referal, totalPointsOfReferringUser) {
     return totalPointsOfReferringUser;
 
 }
-
-module.exports = claculateReferralPoints;
+module.exports = claculateReferralPoints
