@@ -2,15 +2,15 @@ const { dateIndianFormat } = require("../../../../utils/date_format");
 const { getUserActivityData, updateStreak, streakPoints } = require("../dal/videoStreakDal");
 
 
-const videoStreakTrackServices = async (userId) => {
+const videoStreakTrackServices = async (emailId) => {
     try {
         const date = new Date();
         let currentDate = dateIndianFormat(date)
-        const usersActivityData = await getUserActivityData(userId)
+        const usersActivityData = await getUserActivityData(emailId)
         let { streak_days, total_points, prev_date_of_video_watch, curr_date_of_video_watch } = usersActivityData;
         if (prev_date_of_video_watch === null && curr_date_of_video_watch === null) {
             streak_days = 1;
-            await updateStreak(userId, streak_days, currentDate, null)
+            await updateStreak(emailId, streak_days, currentDate, null)
         }
         else {
             let prevDate = dateIndianFormat(curr_date_of_video_watch)

@@ -1,13 +1,13 @@
 const { getCurrentPointsOfUser, checkVideoIsAlreadyWatched, updateVideoList } = require("../dal/watchedVideoHistoryDal")
 
 
-const watchedVideoHistoryServices = async (userId, videoId) => {
+const watchedVideoHistoryServices = async (emailId, videoId) => {
     try {
-        let totalPoints = await getCurrentPointsOfUser(userId)
-        const result = await checkVideoIsAlreadyWatched(userId, videoId)
+        let totalPoints = await getCurrentPointsOfUser(emailId)
+        const result = await checkVideoIsAlreadyWatched(emailId, videoId)
         if (!result) {
             totalPoints += 10;
-            await updateVideoList(userId, videoId, totalPoints)
+            await updateVideoList(emailId, videoId, totalPoints)
         }
 
     } catch (error) {

@@ -1,10 +1,14 @@
 
+const tokenDecoder = require("../../../../utils/tokenDecoder");
 const { totalUserPointsServices } = require("../services/totalUserPointsServices");
 
 async function getUsersPoints(req, res) {
+
+
     try {
-        const userId = req.user.userId;
-        const totalPointsOfUser = await totalUserPointsServices(userId)
+        const token = req.cookies.auth_token;
+        const emailId = tokenDecoder(token)
+        const totalPointsOfUser = await totalUserPointsServices(emailId)
         res.status(200)
             .json(
                 {

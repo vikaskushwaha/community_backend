@@ -1,41 +1,34 @@
-const ulid = require('ulid')
 const db = require("../db_config");
-const { ParameterizedQuery, TableName } = require("pg-promise");
 
 async function createUsersPointsTable(req, res) {
-    const createTable =
-        (`CREATE TABLE IF NOT EXISTS userpoints(
-            id CHAR(26) PRIMARY KEY,
+    const createTable = `
+        CREATE TABLE IF NOT EXISTS userpoints (
+            id CHAR(26), -- Foreign key reference to users(id)
             email VARCHAR(255) UNIQUE,
-            prev_date_of_video_watch  DATE,
-            curr_date_of_video_watch  DATE,
+            prev_date_of_video_watch DATE,
+            curr_date_of_video_watch DATE,
             streak_days INT,
             total_points INT,
-            watched_video text[]
-        
-    ) `)
+            watched_video TEXT[],
+            CONSTRAINT fk_user FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    `;
+
     try {
-        await db.none(createTable);
-        res.status(200)
-        res.json({
+        await db.none(createTable);  // Executes the query to create the table
+        res.status(200).json({
             status: "success",
-            message: "table created succesfully"
-        })
+            message: "Table created successfully"
+        });
     } catch (error) {
-        res.status(500)
-        res.json({
+        console.error(error);
+        res.status(500).json({
             status: "failed",
-            message: "internal"
-        })
+            message: "Internal Server Error"
+        });
     }
-}
-
-async function user_video_activity(req, res) {
-    const userEmail = req.body.email;
-    const date = req.body.date;
-
 }
 
 module.exports = {
     createUsersPointsTable
-}
+};

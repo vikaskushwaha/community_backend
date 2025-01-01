@@ -1,11 +1,14 @@
 
 
+const tokenDecoder = require("../../../../utils/tokenDecoder");
 const { videoStreakTrackServices } = require("../services/videoStreakServices");
 
 async function videoStreakTrack(req, res) {
     try {
-        const userId = req.user.userId;
-        await videoStreakTrackServices(userId);
+        // const userId = req.user.userId;
+        const token = req.cookies.auth_token;
+        const emailId = tokenDecoder(token)
+        await videoStreakTrackServices(emailId);
 
         res.status(200)
             .json(

@@ -1,8 +1,10 @@
 const { totaluserPointsData } = require("../dal/totalUsersPointsDal")
 
-const totalUserPointsServices = async (userId) => {
+const totalUserPointsServices = async (emailId) => {
     try {
-        const result = await totaluserPointsData(userId)
+
+
+        const result = await totaluserPointsData(emailId)
         const totalPointsOfUser = result.total_points
         return totalPointsOfUser;
     } catch (error) {

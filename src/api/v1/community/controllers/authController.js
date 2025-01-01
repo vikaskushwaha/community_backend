@@ -14,11 +14,11 @@ const SECRET_KEY = process.env.JWT_SECRET;
 async function login(req, res) {
     try {
         const userEmail = req.body.email;
-        console.log(userEmail);
-
         const { token, newId } = await loginServices(userEmail)
-
+        console.log("done");
         setAuthTokenCookie(res, token);
+
+
         return res.status(200).json({
             status: "success",
             message: "Login successful",
@@ -47,7 +47,6 @@ async function login(req, res) {
 
 
 async function signup(req, res) {
-
 
     try {
         const path = req.params;
@@ -79,13 +78,14 @@ async function signup(req, res) {
 }
 
 function logOut(req, res) {
-
+    console.log("hi");
 
     res.clearCookie('auth_token', {
-        httpOnly: true, // Prevent client-side JavaScript access
-        secure: true,   // Set true in production for HTTPS
-        sameSite: 'strict', // Mitigate CSRF attacks
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
     });
+
     return res.status(200).send('Logged out successfully');
 
 }

@@ -2,16 +2,21 @@
 const { user } = require("pg/lib/defaults");
 
 const { welcomePageServices } = require("../services/welcomePageServices");
+const tokenDecoder = require("../../../../utils/tokenDecoder");
 
 async function welcomePage(req, res) {
-    const userId = req.user.userId;
-    const { userData, userPoints, totalpercent } = await welcomePageServices(userId)
+    const token = req.cookies.auth_token;
 
+
+    const emailId = tokenDecoder(token)
+    console.log(emailId);
+
+    const { userPoints, totalpercent } = await welcomePageServices(emailId)
     const usersInfo = {
         totalpercent,
         ListOfWatchedVideos: userPoints.watched_video,
-        ShortenedLink: userData.shortenedurl,
-        eulid: userData.id
+        ShortenedLink: userPoints.shortenedurl,
+        eulid: userPoints.id
     }
     res.status(200).json({
         success: true,

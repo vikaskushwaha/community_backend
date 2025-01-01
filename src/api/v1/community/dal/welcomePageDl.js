@@ -1,17 +1,24 @@
 const db = require("../../../../database/db_config");
 
-const welcomePageData = async (userId) => {
+const welcomePageData = async (emailId) => {
     try {
-        const userData = await db.one('SELECT *FROM users WHERE id = $1', [userId])
-        const userPoints = await db.one('SELECT *FROM userpoints WHERE id = $1', [userId])
-        return { userData, userPoints }
+        const userPoints = await db.oneOrNone(`
+          SELECT u.id, u.name, u.shortenedurl, up.total_points, up.watched_video
+          FROM users u
+          JOIN userpoints up ON u.id = up.id
+          WHERE u.email = $1`, [emailId]
+        );
+
+        return { userPoints }
     } catch (error) {
-        throw error
+        throw new Error("not able to fetch")
     }
 }
-
 
 
 module.exports = {
     welcomePageData,
 }
+
+
+

@@ -8,14 +8,16 @@ const visitedByReference = require("./referrals/visitedByReference");
 const loginServices = async (userEmail) => {
     try {
         const user = await findUser(userEmail);
-        console.log(user);
+
 
         if (!user) {
             throw new Error("user not found with this email")
         }
         const newId = user.id;
 
-        const token = tokenGenerator({ ulid: newId, userEmail });
+        const email = userEmail
+        const token = tokenGenerator({ ulid: newId, email });
+
         return { token, newId };
 
     } catch (error) {

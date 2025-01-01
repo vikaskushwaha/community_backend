@@ -8,7 +8,7 @@ const v1Router = express.Router();
 v1Router.use('/auth', authrouter);
 v1Router.use('/api', userActivites)
 
-v1Router.use('database', dbRoutes)
+v1Router.use('/database', dbRoutes)
 
 
 module.exports = v1Router;

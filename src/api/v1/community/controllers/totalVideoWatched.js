@@ -1,10 +1,12 @@
+const tokenDecoder = require("../../../../utils/tokenDecoder");
 const { watchedVideoHistoryServices } = require("../services/watchedVideoHistoryServices");
 
 async function videoWatchHistory(req, res) {
     const videoId = req.body.videoId;
-    const userId = req.user.userId;
+    const token = req.cookies.auth_token;
+    const emailId = tokenDecoder(token)
     try {
-        await watchedVideoHistoryServices(userId, videoId);
+        await watchedVideoHistoryServices(emailId, videoId);
         res.status(200)
             .json(
                 {

@@ -1,7 +1,6 @@
-
 const db = require("../db_config");
-async function createRegisteredUserTable(req, res) {
 
+async function createRegisteredUserTable(req, res) {
     const createTable = `
         CREATE TABLE IF NOT EXISTS users (
             id CHAR(26) PRIMARY KEY,
@@ -10,56 +9,50 @@ async function createRegisteredUserTable(req, res) {
             phone VARCHAR(255) UNIQUE NOT NULL,
             referralurl VARCHAR(100),
             shortenedurl VARCHAR(100),
-            referredCount HSTORE
+            referredCount HSTORE,
+            referred_user_ids CHAR(26)[]
         )
     `;
 
     try {
         await db.none(createTable);
-        res.status(200)
-        res.json({
+        res.status(200).json({
             status: "success",
-            message: "table created succesfully"
-        })
+            message: "Table created successfully"
+        });
     } catch (error) {
-        console.log(error);
-
-        res.status(500)
-        res.json({
+        console.error(error);
+        res.status(500).json({
             status: "failed",
-            message: "internal"
-        })
+            message: "Internal Server Error"
+        });
     }
 }
 
 async function insertNewColumn(req, res) {
     const { tableName, columnName, columnValue } = req.body;
+
     try {
-        let alterQuery = `
-        ALTER TABLE ${tableName}
-        ADD COLUMN ${columnName} ${columnValue}
-    `
-        await db.none(alterQuery)
-        res.send(200)
-        res.json({
+        const alterQuery = `
+            ALTER TABLE ${tableName}
+            ADD COLUMN ${columnName} ${columnValue}
+        `;
+        await db.none(alterQuery);
+
+        res.status(200).json({
             status: "success",
-            message: "new column created"
-        })
-
-
+            message: "New column created"
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: "failed",
+            message: "Internal Server Error"
+        });
     }
-    catch (error) {
-        res.send(500)
-        res.json({
-            status: "faliled",
-            message: "internal server error"
-        })
-    }
-
-
 }
 
 module.exports = {
     createRegisteredUserTable,
     insertNewColumn,
-}
+};

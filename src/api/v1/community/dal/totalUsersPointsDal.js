@@ -1,8 +1,8 @@
 const db = require("../../../../database/db_config");
 
-const totaluserPointsData = async (userId) => {
+const totaluserPointsData = async (emailId) => {
     try {
-        const result = await db.one(`SELECT  total_points FROM userpoints WHERE id= $1`, [userId])
+        const result = await db.one(`SELECT  total_points FROM userpoints WHERE email= $1`, [emailId])
         return result
     } catch (error) {
         throw error
