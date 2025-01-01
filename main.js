@@ -1,9 +1,6 @@
 require('dotenv').config();
 require('./src/database/db_config')
 const express = require('express')
-// const authrouter = require('./src/api/v1/userbase/routes/authroute');
-// const userActivites = require('./src/api/v1/userbase/routes/userActivites')
-// const dbRoutes = require('./src/api/v1/userbase/routes/databaseroutes')
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -23,15 +20,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-// app.use('/auth', authrouter)
 
-// app.use('/api', userActivites)
-
-// app.use('database', dbRoutes)
 
 app.use('/v1', v1Router)
 
-// app.use('/user-activites', user)
+
 app.get('/', (req, res) => {
     res.send("this have been setup")
 })

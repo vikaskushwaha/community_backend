@@ -78,7 +78,7 @@ async function signup(req, res) {
 }
 
 function logOut(req, res) {
-    console.log("hi");
+
 
     res.clearCookie('auth_token', {
         httpOnly: true,
