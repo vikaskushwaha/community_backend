@@ -11,13 +11,13 @@ const { authorizationValidator } = require("../../../../middlewares/validation")
 
 const router = express.Router();
 
-router.get('/welcome', validateRequest(authorizationValidator), welcomePage)
+router.get('/welcome', validateRequest(authorizationValidator, 401), welcomePage)
 
-router.post('/videostreak', validateRequest(authorizationValidator), videoStreakTrack)
+router.post('/videostreak', validateRequest(authorizationValidator, 401), videoStreakTrack)
 
-router.post('/videoWatched', validateRequest(authorizationValidator), videoWatchHistory)
+router.post('/videoWatched', validateRequest(authorizationValidator, 401), videoWatchHistory)
 
-router.get('/getuserpoints', validateRequest(authorizationValidator), getUsersPoints)
+router.get('/getuserpoints', validateRequest(authorizationValidator, 401), getUsersPoints)
 
 router.get('/fetchDsaPlaylist', FetchDsaPlaylist)
 

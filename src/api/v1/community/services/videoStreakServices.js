@@ -27,6 +27,10 @@ const videoStreakTrackServices = async (emailId) => {
                     total_points += 100;
                     await streakPoints(emailId, total_points)
                 }
+                if (streak_days === 100) {
+                    total_points += 500;
+                    await streakPoints(emailId, total_points)
+                }
                 streak_days += 1;
                 await updateStreak(emailId, streak_days, currentDate, prevDate)
             }

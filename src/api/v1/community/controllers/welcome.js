@@ -25,6 +25,8 @@ async function welcomePage(req, res) {
         }
         const { userPoints, totalpercent } = await welcomePageServices(emailId)
         const usersInfo = {
+            userName: userPoints.name,
+            userStreakDays: userPoints.streak_days,
             totalpercent,
             ListOfWatchedVideos: userPoints.watched_video,
             ShortenedLink: userPoints.shortenedurl,

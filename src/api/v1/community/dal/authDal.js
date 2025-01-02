@@ -2,6 +2,8 @@ const db = require("../../../../database/db_config");
 const { ParameterizedQuery, TableName } = require("pg-promise");
 
 const findUser = async (userEmail) => {
+
+
     try {
         const query = `
             SELECT * 
@@ -9,10 +11,11 @@ const findUser = async (userEmail) => {
             WHERE email = $1;
         `;
         const user = await db.oneOrNone(query, [userEmail]);
-
         return user;
     } catch (error) {
+        console.log(error);
         throw error
+
     }
 
 }
@@ -23,7 +26,7 @@ const singupRefferalUrlSearch = async (searchedUrl) => {
         const result = await db.oneOrNone(findLink);
         return result;
     } catch (error) {
-        console.error('Error fetching user details:', error);
+        throw error
     }
 }
 
