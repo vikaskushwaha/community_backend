@@ -21,18 +21,18 @@ const videoStreakTrackServices = async (emailId) => {
             if (diffDays === 1) {
                 if (streak_days === 7) {
                     total_points += 50;
-                    await streakPoints(userId, total_points)
+                    await streakPoints(emailId, total_points)
                 }
-                if (streakPoints === 30) {
+                if (streak_days === 30) {
                     total_points += 100;
-                    await streakPoints(userId, total_points)
+                    await streakPoints(emailId, total_points)
                 }
                 streak_days += 1;
-                await updateStreak(userId, streak_days, currentDate, prevDate)
+                await updateStreak(emailId, streak_days, currentDate, prevDate)
             }
             else if (diffDays > 1) {
                 streak_days = 1;
-                await updateStreak(userId, streak_days, currentDate, prevDate)
+                await updateStreak(emailId, streak_days, currentDate, prevDate)
             }
 
         }

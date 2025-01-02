@@ -5,9 +5,23 @@ const { videoStreakTrackServices } = require("../services/videoStreakServices");
 
 async function videoStreakTrack(req, res) {
     try {
-        // const userId = req.user.userId;
+
         const token = req.cookies.auth_token;
+        if (!token) {
+            res.status(401).json({
+                success: false,
+                message: "Auth token not found on Welcome Page"
+
+            })
+        }
         const emailId = tokenDecoder(token)
+        if (!emailId) {
+            res.status(404).json({
+                success: false,
+                message: "EmailId not found on welcome Page"
+
+            })
+        }
         await videoStreakTrackServices(emailId);
 
         res.status(200)

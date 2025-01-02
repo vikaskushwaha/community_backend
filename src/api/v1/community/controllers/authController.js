@@ -10,15 +10,11 @@ const { singupRefferalUrlSearch } = require("../dal/authDal");
 const SECRET_KEY = process.env.JWT_SECRET;
 
 
-
 async function login(req, res) {
     try {
         const userEmail = req.body.email;
         const { token, newId } = await loginServices(userEmail)
-        console.log("done");
         setAuthTokenCookie(res, token);
-
-
         return res.status(200).json({
             status: "success",
             message: "Login successful",
