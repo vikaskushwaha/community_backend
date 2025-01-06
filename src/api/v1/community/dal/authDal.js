@@ -2,8 +2,6 @@ const db = require("../../../../database/db_config");
 const { ParameterizedQuery, TableName } = require("pg-promise");
 
 const findUser = async (userEmail) => {
-
-
     try {
         const query = `
             SELECT * 

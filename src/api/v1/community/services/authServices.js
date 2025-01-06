@@ -29,7 +29,16 @@ const loginServices = async (userEmail) => {
 
 const signupServices = async (requestUrl, path, name, email, phone) => {
     try {
+
         let referralId;
+        const newId = ulid();
+
+        const refLink = referalLink(newId)
+        const shortenedURL = urlShortener();
+        await signupDatainsertion(newId, name, email, phone, refLink, shortenedURL)
+        await singUpPoints(newId, email)
+
+        const token = tokenGenerator({ ulid: newId, email });
         if (path) {
             let searchedUrl = process.env.SEARCHED_URL + requestUrl;
             const result = await singupRefferalUrlSearch(searchedUrl)
@@ -38,17 +47,11 @@ const signupServices = async (requestUrl, path, name, email, phone) => {
                 const params = new URLSearchParams(parsedUrl.search);
                 referralId = params.get('referral_id');
                 if (referralId) {
-                    visitedByReference(referralId)
+                    visitedByReference(referralId, newId)
                 }
             }
         }
-        const newId = ulid();
-        const refLink = referalLink(newId)
-        const shortenedURL = urlShortener();
-        await signupDatainsertion(newId, name, email, phone, refLink, shortenedURL)
-        await singUpPoints(newId, email)
 
-        const token = tokenGenerator({ ulid: newId, email });
         return {
             token, newId
         };

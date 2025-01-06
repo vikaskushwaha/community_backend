@@ -61,7 +61,7 @@ async function signup(req, res) {
         if (error.constraint === "users_email_key") {
             error.constraint = "This email already registered"
         }
-        if (error.constraint === "users_phone_no") {
+        if (error.constraint === "users_phone_Key") {
             error.constraint = "This Phone no is already registered"
         }
         res.status(500)

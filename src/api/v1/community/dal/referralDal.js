@@ -1,22 +1,31 @@
 const db = require("../../../../database/db_config");
 
-const updateReferredCount = async (referralId, date) => {
+const updateReferredCount = async (referralId, date, newId) => {
     try {
         const query = `
         UPDATE users
-        SET referredCount = 
-            CASE
-                WHEN referredCount IS NULL THEN  -- If referredCount is NULL, initialize with the key
-                    hstore($2, '1')  
-                WHEN referredCount ? $2 THEN
-                    referredCount || hstore($2, (CAST((referredCount -> $2)::int + 1 AS text)))  -- Increment the value by 1
-                ELSE
-                   hstore($2, '1')   --suppose user referred today also  and tomorrow also   then for tomorrow i don't want today's data and since it had some data so it shoud not be null 
-                  
-            END
+        SET 
+            referredCount = 
+                CASE
+                    WHEN referredCount IS NULL THEN  -- If referredCount is NULL, initialize with the key
+                        hstore($2, '1')  
+                    WHEN referredCount ? $2 THEN
+                        referredCount || hstore($2, (CAST((referredCount -> $2)::int + 1 AS text)))  -- Increment the value by 1
+                    ELSE
+                    hstore($2, '1')   --suppose user referred today also  and tomorrow also   then for tomorrow i don't want today's data and since it had some data so it shoud not be null 
+
+                END,
+            referred_user_ids = 
+                CASE 
+                    WHEN referred_user_ids IS NULL THEN 
+                        ARRAY[$3]::char(26)[]
+                    ELSE 
+                       array_append(referred_user_ids, $3)
+                END
+            
         WHERE id = $1;
     `;
-        await db.none(query, [referralId, date]);
+        await db.none(query, [referralId, date, newId]);
     } catch (error) {
         throw error
     }
