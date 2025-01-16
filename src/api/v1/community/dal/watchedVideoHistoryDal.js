@@ -37,8 +37,21 @@ const updateVideoList = async (emailId, videoId, totalPoints) => {
     }
 }
 
+const updateLastWatchedVideo = async (emailId, videoId) => {
+    try {
+        const videotitle = await db.oneOrNone('SELECT title FROM dsaplaylist WHERE videoid = $1', [videoId])
+        if (videotitle.title) {
+            await db.none('UPDATE userpoints SET last_video_title = $1  WHERE email = $2', [videotitle.title, emailId])
+        }
+    } catch (error) {
+        throw new Error("error from updateLastWatchedVideo form watchedVideoHistoryDal", error);
+
+    }
+}
+
 module.exports = {
     getCurrentPointsOfUser,
     checkVideoIsAlreadyWatched,
-    updateVideoList
+    updateVideoList,
+    updateLastWatchedVideo
 }
