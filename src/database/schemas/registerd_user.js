@@ -21,7 +21,7 @@ async function createRegisteredUserTable(req, res) {
             message: "Table created successfully"
         });
     } catch (error) {
-        console.error(error);
+        console.log(error);
         res.status(500).json({
             status: "failed",
             message: "Internal Server Error"
